@@ -27,7 +27,7 @@ public class SayHello implements RequestHandler<SQSEvent, Object> {
                 .withDataType("String"));
         String inputMessage = StringUtils.join(String.valueOf(event.getRecords()
                 .stream()
-                .map(e -> e.getBody())
+                .map(SQSEvent.SQSMessage::getBody)
                 .collect(Collectors.toList())), ",");
         SendMessageRequest sendMessageStandardQueue = new SendMessageRequest()
                 .withQueueUrl(queueUrl)
@@ -35,7 +35,6 @@ public class SayHello implements RequestHandler<SQSEvent, Object> {
                 .withDelaySeconds(30)
                 .withMessageAttributes(messageAttributes);
         sqs.sendMessage(sendMessageStandardQueue);
-//        event.getRecords().forEach( e -> System.out.println(e.getBody()));
         return null;
     }
 }
